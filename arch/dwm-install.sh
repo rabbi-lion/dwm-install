@@ -499,7 +499,38 @@ cp -a "$DOTFILES_DIR/.local/." "$HOME/.local/"
 
 
 # ------------------------------------------------------------
-# 11. Firefox configuration
+# 11. Default image viewer
+# ------------------------------------------------------------
+
+echo
+echo "==> Setting nsxiv as the default image viewer..."
+
+NSXIV_DESKTOP="$HOME/.local/share/applications/nsxiv.desktop"
+
+if [[ ! -f "$NSXIV_DESKTOP" ]]; then
+    echo "ERROR: nsxiv desktop entry is missing:"
+    echo "  $NSXIV_DESKTOP"
+    exit 1
+fi
+
+for type in \
+    image/jpeg \
+    image/png \
+    image/gif \
+    image/webp \
+    image/bmp \
+    image/tiff \
+    image/svg+xml \
+    image/avif \
+    image/heif \
+    image/jxl
+do
+    xdg-mime default nsxiv.desktop "$type"
+done
+
+
+# ------------------------------------------------------------
+# 12. Firefox configuration
 # ------------------------------------------------------------
 
 echo
@@ -519,7 +550,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 12. Thunderbird configuration
+# 13. Thunderbird configuration
 # ------------------------------------------------------------
 
 echo
@@ -539,7 +570,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 13. Default wallpaper
+# 14. Default wallpaper
 # ------------------------------------------------------------
 
 echo
@@ -557,7 +588,7 @@ install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 14. Redshift location
+# 15. Redshift location
 # ------------------------------------------------------------
 
 echo
@@ -594,7 +625,7 @@ sed -i \
 
 
 # ------------------------------------------------------------
-# 15. Touchpad
+# 16. Touchpad
 # ------------------------------------------------------------
 
 echo
@@ -614,7 +645,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 16. Optional keyboard localization
+# 17. Optional keyboard localization
 # ------------------------------------------------------------
 
 echo
@@ -656,7 +687,7 @@ fi
 
 
 # ------------------------------------------------------------
-# 17. tty1 username pre-fill
+# 18. tty1 username pre-fill
 # ------------------------------------------------------------
 
 echo
@@ -678,7 +709,17 @@ sudo systemctl daemon-reload
 
 
 # ------------------------------------------------------------
-# 18. Finish
+# 19. Remove cloned dotfiles
+# ------------------------------------------------------------
+
+echo
+echo "==> Removing cloned dotfiles source..."
+
+rm -rf -- "$DOTFILES_DIR"
+
+
+# ------------------------------------------------------------
+# 20. Finish
 # ------------------------------------------------------------
 
 echo
@@ -695,6 +736,7 @@ echo "  - st"
 echo "  - dmenu"
 echo "  - dwmblocks"
 echo "  - nsxiv"
+echo "  - nsxiv default image association"
 echo "  - dotfiles"
 echo "  - Firefox configuration"
 echo "  - Thunderbird configuration"
@@ -725,7 +767,7 @@ echo "GTK settings are provided by the dotfiles repository."
 
 
 # ------------------------------------------------------------
-# 19. Delete installer
+# 21. Delete installer
 # ------------------------------------------------------------
 
 echo
@@ -735,7 +777,7 @@ rm -f -- "$SCRIPT_PATH"
 
 
 # ------------------------------------------------------------
-# 20. Reboot
+# 22. Reboot
 # ------------------------------------------------------------
 
 echo
