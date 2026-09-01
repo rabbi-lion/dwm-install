@@ -16,7 +16,7 @@ DWMBLOCKS_REPO="https://github.com/rabbi-lion/dwmblocks.git"
 NSXIV_REPO="https://github.com/rabbi-lion/nsxiv.git"
 DOTFILES_REPO="https://github.com/rabbi-lion/dotfiles.git"
 
-DEFAULT_WALLPAPER="dante-et-vergil-dans-le-neuvieme-cercle-de-l-enfer.jpg"
+DEFAULT_WALLPAPER="dante-et-vergil-dans-le-neuvieme-cercle-de-l'enfer.jpg"
 
 
 # ------------------------------------------------------------
