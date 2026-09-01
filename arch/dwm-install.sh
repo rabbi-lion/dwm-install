@@ -159,7 +159,204 @@ sudo pacman -S --needed \
 
 
 # ------------------------------------------------------------
-# 4. Optional NVIDIA driver
+# 4. Audio output selection
+# ------------------------------------------------------------
+
+echo
+echo "==> Configuring audio output..."
+
+if command -v wpctl >/dev/null 2>&1; then
+    # PipeWire normally uses socket activation, but start the user services
+    # now so that sinks are available during the installer.
+    systemctl --user start \
+        pipewire.service \
+        pipewire-pulse.service \
+        wireplumber.service \
+        >/dev/null 2>&1 || true
+
+    SINK_LIST=""
+
+    # Give WirePlumber a few seconds to discover the audio hardware.
+    for _ in {1..10}; do
+        SINK_LIST="$(wpctl list audio sinks 2>/dev/null || true)"
+
+        if [[ -n "$SINK_LIST" ]]; then
+            break
+        fi
+
+        sleep 1
+    done
+
+    if [[ -n "$SINK_LIST" ]]; then
+        WPCTL_STATUS="$(wpctl status 2>/dev/null || true)"
+
+        declare -a SINK_IDS=()
+        declare -a SINK_NAMES=()
+        declare -a SINK_DESCRIPTIONS=()
+        declare -a SINK_HINTS=()
+        declare -a SINK_DEFAULTS=()
+
+        audio_sink_description() {
+            local sink_id="$1"
+            local fallback_name="$2"
+            local status_line=""
+            local description=""
+
+            status_line="$(
+                printf '%s\n' "$WPCTL_STATUS" \
+                    | grep -m1 -E "[[:space:]]\*?[[:space:]]*${sink_id}\.[[:space:]]" \
+                    || true
+            )"
+
+            if [[ -n "$status_line" ]]; then
+                description="$(
+                    printf '%s\n' "$status_line" \
+                        | sed -E \
+                            -e "s/^.*[[:space:]]\*?[[:space:]]*${sink_id}\.[[:space:]]+//" \
+                            -e 's/[[:space:]]+\[vol:[^]]+\]$//'
+                )"
+            fi
+
+            if [[ -z "$description" ]]; then
+                description="$(
+                    wpctl inspect "$sink_id" 2>/dev/null \
+                        | awk '
+                            {
+                                line = $0
+                                sub(/^[[:space:]*]+/, "", line)
+                                prefix = "node.description = \""
+
+                                if (index(line, prefix) == 1) {
+                                    line = substr(line, length(prefix) + 1)
+                                    sub(/\"$/, "", line)
+                                    print line
+                                    exit
+                                }
+                            }
+                        ' \
+                        || true
+                )"
+            fi
+
+            printf '%s' "${description:-$fallback_name}"
+        }
+
+        audio_sink_hint() {
+            local text="${1,,} ${2,,}"
+
+            case "$text" in
+                *hdmi*|*displayport*|*"display port"*)
+                    printf '%s' "HDMI/DisplayPort - monitor or TV audio"
+                    ;;
+                *iec958*|*spdif*|*"s/pdif"*)
+                    printf '%s' "S/PDIF - optical/digital audio"
+                    ;;
+                *usb*)
+                    printf '%s' "USB audio - headset, DAC or interface"
+                    ;;
+                *analog*|*speaker*|*headphone*)
+                    printf '%s' "Analog - normal speakers/headphones"
+                    ;;
+                *)
+                    printf '%s' "Audio output"
+                    ;;
+            esac
+        }
+
+        while IFS=$'\t' read -r sink_id sink_name sink_type sink_default; do
+            [[ "$sink_id" =~ ^[0-9]+$ ]] || continue
+            [[ "$sink_type" == "audio/sink" ]] || continue
+
+            sink_description="$(audio_sink_description "$sink_id" "$sink_name")"
+            sink_hint="$(audio_sink_hint "$sink_description" "$sink_name")"
+
+            SINK_IDS+=("$sink_id")
+            SINK_NAMES+=("$sink_name")
+            SINK_DESCRIPTIONS+=("$sink_description")
+            SINK_HINTS+=("$sink_hint")
+            SINK_DEFAULTS+=("$sink_default")
+        done <<< "$SINK_LIST"
+
+        if (( ${#SINK_IDS[@]} > 0 )); then
+            echo
+            echo "Available audio outputs:"
+            echo
+
+            for i in "${!SINK_IDS[@]}"; do
+                current=""
+
+                if [[ "${SINK_DEFAULTS[$i]}" == *"*"* ]]; then
+                    current=" [current default]"
+                fi
+
+                printf '  %d) %s%s\n' \
+                    "$((i + 1))" \
+                    "${SINK_DESCRIPTIONS[$i]}" \
+                    "$current"
+                printf '     %s\n' "${SINK_HINTS[$i]}"
+            done
+
+            echo
+            echo "Note: GPU DisplayPort audio is commonly labelled HDMI by PipeWire."
+            echo
+
+            while true; do
+                AUDIO_CHOICE=""
+
+                read -rp \
+                    "Default audio output [1-${#SINK_IDS[@]}, Enter = keep current]: " \
+                    AUDIO_CHOICE \
+                    </dev/tty
+
+                if [[ -z "$AUDIO_CHOICE" ]]; then
+                    echo "Keeping the current default audio output."
+                    break
+                fi
+
+                if [[ "$AUDIO_CHOICE" =~ ^[0-9]+$ ]] \
+                    && (( AUDIO_CHOICE >= 1 && AUDIO_CHOICE <= ${#SINK_IDS[@]} )); then
+
+                    AUDIO_INDEX=$((AUDIO_CHOICE - 1))
+                    AUDIO_SINK_ID="${SINK_IDS[$AUDIO_INDEX]}"
+
+                    if wpctl set-default "$AUDIO_SINK_ID"; then
+                        echo
+                        echo "Default audio output set to:"
+                        echo "  ${SINK_DESCRIPTIONS[$AUDIO_INDEX]}"
+                        echo
+                        echo "WirePlumber will remember this selection across restarts."
+                    else
+                        echo
+                        echo "WARNING: Could not set the selected audio output."
+                        echo "You can configure it later with: wpctl status"
+                    fi
+
+                    break
+                fi
+
+                echo "Please choose a number from 1 to ${#SINK_IDS[@]}, or press Enter."
+            done
+        else
+            echo
+            echo "WARNING: No usable PipeWire audio sinks were found."
+            echo "Skipping audio output selection."
+            echo "You can configure it later with: wpctl status"
+        fi
+    else
+        echo
+        echo "WARNING: PipeWire/WirePlumber did not report any audio sinks."
+        echo "Skipping audio output selection."
+        echo "You can configure it later with: wpctl status"
+    fi
+else
+    echo
+    echo "WARNING: wpctl is unavailable."
+    echo "Skipping audio output selection."
+fi
+
+
+# ------------------------------------------------------------
+# 5. Optional NVIDIA driver
 # ------------------------------------------------------------
 
 echo
@@ -196,7 +393,7 @@ fi
 
 
 # ------------------------------------------------------------
-# 5. Source directory
+# 6. Source directory
 # ------------------------------------------------------------
 
 echo
@@ -215,7 +412,7 @@ fi
 
 
 # ------------------------------------------------------------
-# 6. Source repository helper
+# 7. Source repository helper
 # ------------------------------------------------------------
 
 clone_or_update() {
@@ -241,7 +438,7 @@ clone_or_update() {
 
 
 # ------------------------------------------------------------
-# 7. Build dwm / st / dmenu / dwmblocks
+# 8. Build dwm / st / dmenu / dwmblocks
 # ------------------------------------------------------------
 
 build_suckless() {
@@ -265,7 +462,7 @@ build_suckless dwmblocks "$DWMBLOCKS_REPO"
 
 
 # ------------------------------------------------------------
-# 8. Build nsxiv
+# 9. Build nsxiv
 # ------------------------------------------------------------
 
 clone_or_update nsxiv "$NSXIV_REPO"
@@ -279,7 +476,7 @@ sudo make -C "$SRC_DIR/nsxiv" install-all
 
 
 # ------------------------------------------------------------
-# 9. Dotfiles
+# 10. Dotfiles
 # ------------------------------------------------------------
 
 echo
@@ -302,7 +499,7 @@ cp -a "$DOTFILES_DIR/.local/." "$HOME/.local/"
 
 
 # ------------------------------------------------------------
-# 10. Firefox configuration
+# 11. Firefox configuration
 # ------------------------------------------------------------
 
 echo
@@ -322,7 +519,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 11. Thunderbird configuration
+# 12. Thunderbird configuration
 # ------------------------------------------------------------
 
 echo
@@ -342,7 +539,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 12. Default wallpaper
+# 13. Default wallpaper
 # ------------------------------------------------------------
 
 echo
@@ -360,7 +557,7 @@ install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 13. Redshift location
+# 14. Redshift location
 # ------------------------------------------------------------
 
 echo
@@ -397,7 +594,7 @@ sed -i \
 
 
 # ------------------------------------------------------------
-# 14. Touchpad
+# 15. Touchpad
 # ------------------------------------------------------------
 
 echo
@@ -417,7 +614,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 15. Optional keyboard localization
+# 16. Optional keyboard localization
 # ------------------------------------------------------------
 
 echo
@@ -459,7 +656,7 @@ fi
 
 
 # ------------------------------------------------------------
-# 16. tty1 username pre-fill
+# 17. tty1 username pre-fill
 # ------------------------------------------------------------
 
 echo
@@ -481,7 +678,7 @@ sudo systemctl daemon-reload
 
 
 # ------------------------------------------------------------
-# 17. Finish
+# 18. Finish
 # ------------------------------------------------------------
 
 echo
@@ -492,6 +689,7 @@ echo
 echo "Installed:"
 echo "  - XLibre"
 echo "  - applications"
+echo "  - PipeWire / WirePlumber audio"
 echo "  - dwm"
 echo "  - st"
 echo "  - dmenu"
@@ -527,7 +725,7 @@ echo "GTK settings are provided by the dotfiles repository."
 
 
 # ------------------------------------------------------------
-# 18. Delete installer
+# 19. Delete installer
 # ------------------------------------------------------------
 
 echo
@@ -537,7 +735,7 @@ rm -f -- "$SCRIPT_PATH"
 
 
 # ------------------------------------------------------------
-# 19. Reboot
+# 20. Reboot
 # ------------------------------------------------------------
 
 echo
