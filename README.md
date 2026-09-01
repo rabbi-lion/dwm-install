@@ -151,7 +151,7 @@ Status scripts are installed under:
 
 `nsxiv` is used as the default image viewer.
 
-It is **compiled from source from my GitHub repository** and is not installed from the Arch Linux repositories.
+`nsxiv` itself is **compiled from source from my GitHub repository** by `dwm-install`; it is not installed from the Arch Linux or Debian repositories.
 
 Source:
 
