@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Made by rabbi-lion
+# License: GNU GPLv3
+
 set -euo pipefail
 
 # ============================================================
