@@ -202,6 +202,14 @@ dwm
 
 Caps Lock and Escape are swapped for the X session.
 
+## Appearance
+
+No third-party GTK themes or icon packs are installed.
+
+The setup uses the stock Adwaita appearance provided by the system, including Thunar's default Adwaita styling and icons.
+
+This keeps the environment simple and avoids extra theme and icon dependencies.
+
 ## Audio
 
 Audio uses PipeWire and WirePlumber with PulseAudio and JACK compatibility.
