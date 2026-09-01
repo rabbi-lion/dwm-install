@@ -246,6 +246,7 @@ sudo apt-get install -y \
     neovim \
     pciutils \
     pipewire \
+    pipewire-jack \
     pipewire-pulse \
     pulsemixer \
     redshift \
@@ -504,7 +505,47 @@ cp -a "$DOTFILES_DIR/.local/." "$HOME/.local/"
 
 
 # ------------------------------------------------------------
-# 14. Default wallpaper
+# 14. Firefox configuration
+# ------------------------------------------------------------
+
+echo
+echo "==> Installing Firefox configuration..."
+
+FIREFOX_POLICY="$DOTFILES_DIR/system/etc/firefox/policies/policies.json"
+
+if [[ ! -f "$FIREFOX_POLICY" ]]; then
+    echo "ERROR: Firefox policy is missing:"
+    echo "  $FIREFOX_POLICY"
+    exit 1
+fi
+
+sudo install -Dm644 \
+    "$FIREFOX_POLICY" \
+    /etc/firefox/policies/policies.json
+
+
+# ------------------------------------------------------------
+# 15. Thunderbird configuration
+# ------------------------------------------------------------
+
+echo
+echo "==> Installing Thunderbird configuration..."
+
+THUNDERBIRD_POLICY="$DOTFILES_DIR/system/usr/lib/thunderbird/distribution/policies.json"
+
+if [[ ! -f "$THUNDERBIRD_POLICY" ]]; then
+    echo "ERROR: Thunderbird policy is missing:"
+    echo "  $THUNDERBIRD_POLICY"
+    exit 1
+fi
+
+sudo install -Dm644 \
+    "$THUNDERBIRD_POLICY" \
+    /usr/lib/thunderbird/distribution/policies.json
+
+
+# ------------------------------------------------------------
+# 16. Default wallpaper
 # ------------------------------------------------------------
 
 echo
@@ -522,7 +563,7 @@ install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 15. Redshift location
+# 17. Redshift location
 # ------------------------------------------------------------
 
 echo
@@ -559,7 +600,7 @@ sed -i \
 
 
 # ------------------------------------------------------------
-# 16. Touchpad
+# 18. Touchpad
 # ------------------------------------------------------------
 
 echo
@@ -579,7 +620,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 17. Optional keyboard localization
+# 19. Optional keyboard localization
 # ------------------------------------------------------------
 
 echo
@@ -623,7 +664,7 @@ fi
 
 
 # ------------------------------------------------------------
-# 18. tty1 username pre-fill
+# 20. tty1 username pre-fill
 # ------------------------------------------------------------
 
 echo
@@ -651,7 +692,7 @@ fi
 
 
 # ------------------------------------------------------------
-# 19. Finish
+# 21. Finish
 # ------------------------------------------------------------
 
 echo
@@ -675,6 +716,8 @@ echo "  - dmenu"
 echo "  - dwmblocks"
 echo "  - nsxiv"
 echo "  - dotfiles"
+echo "  - Firefox configuration"
+echo "  - Thunderbird configuration"
 echo "  - default wallpaper"
 echo "  - natural touchpad scrolling"
 echo
@@ -697,11 +740,11 @@ echo "  ~/.local/bin/wallpaper-slideshow"
 echo
 echo "Caps Lock / Escape swapping is handled by ~/.xinitrc."
 echo
-echo "GTK settings are intentionally not configured."
+echo "GTK settings are provided by the dotfiles repository."
 
 
 # ------------------------------------------------------------
-# 20. Delete installer
+# 22. Delete installer
 # ------------------------------------------------------------
 
 echo
@@ -711,7 +754,7 @@ rm -f -- "$SCRIPT_PATH"
 
 
 # ------------------------------------------------------------
-# 21. Reboot
+# 23. Reboot
 # ------------------------------------------------------------
 
 echo
