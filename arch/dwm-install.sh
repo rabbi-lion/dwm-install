@@ -116,6 +116,7 @@ echo
 echo "==> Installing packages..."
 
 sudo pacman -S --needed \
+    base-devel \
     brightnessctl \
     dunst \
     fastfetch \
@@ -128,14 +129,19 @@ sudo pacman -S --needed \
     imlib2 \
     keepassxc \
     libexif \
+    libx11 \
+    libxft \
+    libxinerama \
     maim \
     mousepad \
     mpv \
+    neovim \
     pciutils \
     pipewire \
     pipewire-jack \
     pipewire-pulse \
     pulsemixer \
+    python \
     redshift \
     thunar \
     thunderbird \
@@ -482,9 +488,18 @@ sudo make -C "$SRC_DIR/nsxiv" install-all
 echo
 echo "==> Installing dotfiles..."
 
-DOTFILES_DIR="$SRC_DIR/dotfiles"
+DOTFILES_DIR="$(mktemp -d "${TMPDIR:-/tmp}/dwm-dotfiles.XXXXXX")"
 
-clone_or_update dotfiles "$DOTFILES_REPO"
+cleanup_dotfiles() {
+    if [[ -n "${DOTFILES_DIR:-}" && -d "$DOTFILES_DIR" ]]; then
+        rm -rf -- "$DOTFILES_DIR"
+    fi
+}
+
+trap cleanup_dotfiles EXIT
+
+echo "==> Cloning dotfiles..."
+git clone --depth 1 "$DOTFILES_REPO" "$DOTFILES_DIR"
 
 mkdir -p "$HOME/.config"
 mkdir -p "$HOME/.local"
@@ -506,6 +521,7 @@ echo
 echo "==> Setting nsxiv as the default image viewer..."
 
 NSXIV_DESKTOP="$HOME/.local/share/applications/nsxiv.desktop"
+NSXIV_RIFLE="$HOME/.local/bin/nsxiv-rifle"
 
 if [[ ! -f "$NSXIV_DESKTOP" ]]; then
     echo "ERROR: nsxiv desktop entry is missing:"
@@ -513,17 +529,41 @@ if [[ ! -f "$NSXIV_DESKTOP" ]]; then
     exit 1
 fi
 
+if [[ ! -x "$NSXIV_RIFLE" ]]; then
+    echo "ERROR: nsxiv-rifle is missing or not executable:"
+    echo "  $NSXIV_RIFLE"
+    exit 1
+fi
+
+# The repository desktop entry stays generic:
+# Exec=nsxiv-rifle %f
+#
+# Resolve it to this user's absolute path in the installed copy so GUI
+# launchers do not depend on PATH or a hard-coded username.
+sed -i \
+    "s|^Exec=.*|Exec=$NSXIV_RIFLE %f|" \
+    "$NSXIV_DESKTOP"
+
 for type in \
-    image/jpeg \
-    image/png \
-    image/gif \
-    image/webp \
     image/bmp \
+    image/gif \
+    image/jpeg \
+    image/jpg \
+    image/png \
     image/tiff \
+    image/x-bmp \
+    image/x-portable-anymap \
+    image/x-portable-bitmap \
+    image/x-portable-graymap \
+    image/x-tga \
+    image/x-xpixmap \
+    image/webp \
+    image/heic \
     image/svg+xml \
+    image/jp2 \
+    image/jxl \
     image/avif \
-    image/heif \
-    image/jxl
+    image/heif
 do
     xdg-mime default nsxiv.desktop "$type"
 done
@@ -559,7 +599,7 @@ echo "==> Installing Thunderbird configuration..."
 THUNDERBIRD_POLICY="$DOTFILES_DIR/system/usr/lib/thunderbird/distribution/policies.json"
 
 if [[ ! -f "$THUNDERBIRD_POLICY" ]]; then
-    echo "ERROR: Thunderbird policy is missing:"
+    echo "ERROR: Thunderbird configuration is missing:"
     echo "  $THUNDERBIRD_POLICY"
     exit 1
 fi
@@ -709,13 +749,15 @@ sudo systemctl daemon-reload
 
 
 # ------------------------------------------------------------
-# 19. Remove cloned dotfiles
+# 19. Remove temporary dotfiles
 # ------------------------------------------------------------
 
 echo
-echo "==> Removing cloned dotfiles source..."
+echo "==> Removing temporary dotfiles..."
 
-rm -rf -- "$DOTFILES_DIR"
+cleanup_dotfiles
+DOTFILES_DIR=""
+trap - EXIT
 
 
 # ------------------------------------------------------------
