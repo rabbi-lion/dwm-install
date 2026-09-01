@@ -208,12 +208,23 @@ Audio device handling uses `wpctl`.
 
 Firefox and Thunderbird receive system policies from the dotfiles repository.
 
-Firefox configuration includes privacy and interface preferences together with:
+Both policies fix file-picker behavior for the X11/dwm environment by setting:
+
+`widget.use-xdg-desktop-portal.file-picker = 0`
+
+This makes Firefox and Thunderbird use their native file pickers instead of the XDG desktop portal file picker.
+
+Firefox configuration also includes privacy and interface preferences together with:
 
 - uBlock Origin
 - Dark Reader
 - Enhancer for YouTube
 - I Still Don't Care About Cookies
+
+On Debian, the policies are installed to:
+
+- Firefox: `/etc/firefox/policies/policies.json`
+- Thunderbird: `/usr/lib/thunderbird/distribution/policies.json`
 
 ## Wallpaper
 
