@@ -229,8 +229,6 @@ It is installed to:
 ~/Pictures/Wallpapers/
 ```
 
-The image is a public-domain reproduction from Wikimedia Commons. Licensing information is documented in the dotfiles repository.
-
 ## Redshift and keyboard
 
 The installer asks for latitude and longitude for Redshift.
