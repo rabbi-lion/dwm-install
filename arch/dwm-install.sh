@@ -153,7 +153,6 @@ sudo pacman -S --needed \
     xorg-xset \
     yt-dlp \
     zathura \
-    zathura-pdf-mupdf \
     zathura-pdf-poppler \
     zip
 
