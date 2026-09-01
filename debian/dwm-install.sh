@@ -93,6 +93,7 @@ mkdir -p \
     "$HOME/Downloads" \
     "$HOME/Music" \
     "$HOME/Pictures" \
+    "$HOME/Pictures/Screenshots" \
     "$HOME/Pictures/Wallpapers" \
     "$HOME/Videos"
 
@@ -989,6 +990,7 @@ echo "  - ~/Documents"
 echo "  - ~/Downloads"
 echo "  - ~/Music"
 echo "  - ~/Pictures"
+echo "  - ~/Pictures/Screenshots"
 echo "  - ~/Pictures/Wallpapers"
 echo "  - ~/Videos"
 echo
