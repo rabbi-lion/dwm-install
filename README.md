@@ -204,9 +204,9 @@ Caps Lock and Escape are swapped for the X session.
 
 ## Appearance
 
-No third-party GTK themes or icon packs are installed.
+No third-party GTK themes or icon packs are included.
 
-The setup uses the stock Adwaita appearance provided by the system, including Thunar's default Adwaita styling and icons.
+The setup uses the stock Adwaita GTK appearance and the default system icons used by Thunar.
 
 This keeps the environment simple and avoids extra theme and icon dependencies.
 
