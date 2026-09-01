@@ -15,8 +15,7 @@ Run the installer as your normal user, **not as root**.
 ```sh
 sudo pacman -S --needed curl
 
-curl -fLo "$HOME/dwm-install.sh" \
-    https://raw.githubusercontent.com/rabbi-lion/dwm-install/master/arch/dwm-install.sh
+curl -fLo "$HOME/dwm-install.sh" https://raw.githubusercontent.com/rabbi-lion/dwm-install/master/arch/dwm-install.sh
 
 chmod +x "$HOME/dwm-install.sh"
 "$HOME/dwm-install.sh"
@@ -28,8 +27,7 @@ chmod +x "$HOME/dwm-install.sh"
 sudo apt-get update
 sudo apt-get install -y curl
 
-curl -fLo "$HOME/dwm-install.sh" \
-    https://raw.githubusercontent.com/rabbi-lion/dwm-install/master/debian/dwm-install.sh
+curl -fLo "$HOME/dwm-install.sh" https://raw.githubusercontent.com/rabbi-lion/dwm-install/master/debian/dwm-install.sh
 
 chmod +x "$HOME/dwm-install.sh"
 "$HOME/dwm-install.sh"
