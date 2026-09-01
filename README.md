@@ -147,9 +147,15 @@ Status scripts are installed under:
 ~/.local/bin/statusbar/
 ```
 
-## Image handling
+## nsxiv
 
 `nsxiv` is used as the default image viewer.
+
+It is **compiled from source from my GitHub repository** and is not installed from the Arch Linux repositories.
+
+Source:
+
+`https://github.com/rabbi-lion/nsxiv`
 
 The setup includes:
 
@@ -161,9 +167,7 @@ The setup includes:
 
 The file-manager helper is:
 
-```text
-~/.local/bin/nsxiv-rifle
-```
+`~/.local/bin/nsxiv-rifle`
 
 Stock nsxiv scaling behavior is preserved.
 
