@@ -19,6 +19,8 @@ DMENU_REPO="https://git.suckless.org/dmenu"
 DWMBLOCKS_REPO="https://github.com/rabbi-lion/dwmblocks.git"
 NSXIV_REPO="https://github.com/rabbi-lion/nsxiv.git"
 DOTFILES_REPO="https://github.com/rabbi-lion/dotfiles.git"
+GTK_THEME_REPO="https://github.com/edwinagudelojaramillo/retro-theme.git"
+ICON_THEME_REPO="https://www.opencode.net/deepspacewhine/indigo-reality.git"
 
 DEFAULT_WALLPAPER="dante-et-vergil-dans-le-neuvieme-cercle-de-l'enfer.jpg"
 
@@ -699,7 +701,31 @@ cp -a "$DOTFILES_DIR/.local/." "$HOME/.local/"
 
 
 # ------------------------------------------------------------
-# 15. Default image viewer
+# 15. GTK and icon themes
+# ------------------------------------------------------------
+
+echo
+echo "==> Installing GTK and icon themes..."
+
+mkdir -p \
+    "$HOME/.local/share/themes" \
+    "$HOME/.local/share/icons"
+
+rm -rf \
+    "$HOME/.local/share/themes/M3nt3X-TH3M3" \
+    "$HOME/.local/share/icons/Indigo-Reality"
+
+git clone --depth 1 \
+    "$GTK_THEME_REPO" \
+    "$HOME/.local/share/themes/M3nt3X-TH3M3"
+
+git clone --depth 1 \
+    "$ICON_THEME_REPO" \
+    "$HOME/.local/share/icons/Indigo-Reality"
+
+
+# ------------------------------------------------------------
+# 16. Default image viewer
 # ------------------------------------------------------------
 
 echo
@@ -755,7 +781,7 @@ done
 
 
 # ------------------------------------------------------------
-# 16. Firefox configuration
+# 17. Firefox configuration
 # ------------------------------------------------------------
 
 echo
@@ -775,7 +801,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 17. Thunderbird configuration
+# 18. Thunderbird configuration
 # ------------------------------------------------------------
 
 echo
@@ -795,7 +821,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 18. Default wallpaper
+# 19. Default wallpaper
 # ------------------------------------------------------------
 
 echo
@@ -813,7 +839,7 @@ install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 19. Redshift location
+# 20. Redshift location
 # ------------------------------------------------------------
 
 echo
@@ -850,7 +876,7 @@ sed -i \
 
 
 # ------------------------------------------------------------
-# 20. Touchpad
+# 21. Touchpad
 # ------------------------------------------------------------
 
 echo
@@ -870,7 +896,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 21. Optional keyboard localization
+# 22. Optional keyboard localization
 # ------------------------------------------------------------
 
 echo
@@ -914,7 +940,7 @@ fi
 
 
 # ------------------------------------------------------------
-# 22. tty1 username pre-fill
+# 23. tty1 username pre-fill
 # ------------------------------------------------------------
 
 echo
@@ -942,7 +968,7 @@ fi
 
 
 # ------------------------------------------------------------
-# 23. Remove temporary dotfiles
+# 24. Remove temporary dotfiles
 # ------------------------------------------------------------
 
 echo
@@ -954,7 +980,7 @@ trap - EXIT
 
 
 # ------------------------------------------------------------
-# 24. Finish
+# 25. Finish
 # ------------------------------------------------------------
 
 echo
@@ -980,6 +1006,8 @@ echo "  - dwmblocks"
 echo "  - nsxiv"
 echo "  - nsxiv default image association"
 echo "  - dotfiles"
+echo "  - M3nt3X-TH3M3 GTK theme"
+echo "  - Indigo Reality icon theme"
 echo "  - Firefox configuration"
 echo "  - Thunderbird configuration"
 echo "  - default wallpaper"
@@ -1009,7 +1037,7 @@ echo "GTK settings are provided by the dotfiles repository."
 
 
 # ------------------------------------------------------------
-# 25. Delete installer
+# 26. Delete installer
 # ------------------------------------------------------------
 
 echo
@@ -1019,7 +1047,7 @@ rm -f -- "$SCRIPT_PATH"
 
 
 # ------------------------------------------------------------
-# 26. Reboot
+# 27. Reboot
 # ------------------------------------------------------------
 
 echo
