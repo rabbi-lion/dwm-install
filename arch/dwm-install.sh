@@ -160,6 +160,7 @@ sudo pacman -S --needed \
     wireplumber \
     xarchiver \
     xclip \
+    xcursor-vanilla-dmz \
     xdg-utils \
     xorg-setxkbmap \
     xorg-xinit \
@@ -813,6 +814,7 @@ echo "  - nsxiv default image association"
 echo "  - dotfiles"
 echo "  - M3nt3X-TH3M3 GTK theme"
 echo "  - Indigo Reality icon theme"
+echo "  - Vanilla-DMZ cursor theme"
 echo "  - Firefox configuration"
 echo "  - Thunderbird configuration"
 echo "  - default wallpaper"
