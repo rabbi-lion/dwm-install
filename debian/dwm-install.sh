@@ -702,11 +702,11 @@ cp -a "$DOTFILES_DIR/.local/." "$HOME/.local/"
 
 
 # ------------------------------------------------------------
-# 15. GTK and icon themes
+# 15. GTK, icon and cursor themes
 # ------------------------------------------------------------
 
 echo
-echo "==> Installing GTK and icon themes..."
+echo "==> Installing GTK, icon and cursor themes..."
 
 mkdir -p \
     "$HOME/.local/share/themes" \
@@ -723,6 +723,16 @@ git clone --depth 1 \
 git clone --depth 1 \
     "$ICON_THEME_REPO" \
     "$HOME/.local/share/icons/Indigo-Reality"
+
+echo
+echo "==> Configuring default cursor theme..."
+
+mkdir -p "$HOME/.local/share/icons/default"
+
+cat > "$HOME/.local/share/icons/default/index.theme" <<'EOF'
+[Icon Theme]
+Inherits=Vanilla-DMZ
+EOF
 
 
 # ------------------------------------------------------------
