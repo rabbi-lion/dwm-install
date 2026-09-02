@@ -19,6 +19,8 @@ DMENU_REPO="https://git.suckless.org/dmenu"
 DWMBLOCKS_REPO="https://github.com/rabbi-lion/dwmblocks.git"
 NSXIV_REPO="https://github.com/rabbi-lion/nsxiv.git"
 DOTFILES_REPO="https://github.com/rabbi-lion/dotfiles.git"
+GTK_THEME_REPO="https://github.com/edwinagudelojaramillo/retro-theme.git"
+ICON_THEME_REPO="https://www.opencode.net/deepspacewhine/indigo-reality.git"
 
 DEFAULT_WALLPAPER="dante-et-vergil-dans-le-neuvieme-cercle-de-l'enfer.jpg"
 
@@ -519,7 +521,31 @@ cp -a "$DOTFILES_DIR/.local/." "$HOME/.local/"
 
 
 # ------------------------------------------------------------
-# 11. Default image viewer
+# 11. GTK and icon themes
+# ------------------------------------------------------------
+
+echo
+echo "==> Installing GTK and icon themes..."
+
+mkdir -p \
+    "$HOME/.local/share/themes" \
+    "$HOME/.local/share/icons"
+
+rm -rf \
+    "$HOME/.local/share/themes/M3nt3X-TH3M3" \
+    "$HOME/.local/share/icons/Indigo-Reality"
+
+git clone --depth 1 \
+    "$GTK_THEME_REPO" \
+    "$HOME/.local/share/themes/M3nt3X-TH3M3"
+
+git clone --depth 1 \
+    "$ICON_THEME_REPO" \
+    "$HOME/.local/share/icons/Indigo-Reality"
+
+
+# ------------------------------------------------------------
+# 12. Default image viewer
 # ------------------------------------------------------------
 
 echo
@@ -575,7 +601,7 @@ done
 
 
 # ------------------------------------------------------------
-# 12. Firefox configuration
+# 13. Firefox configuration
 # ------------------------------------------------------------
 
 echo
@@ -595,7 +621,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 13. Thunderbird configuration
+# 14. Thunderbird configuration
 # ------------------------------------------------------------
 
 echo
@@ -615,7 +641,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 14. Default wallpaper
+# 15. Default wallpaper
 # ------------------------------------------------------------
 
 echo
@@ -633,7 +659,7 @@ install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 15. Redshift location
+# 16. Redshift location
 # ------------------------------------------------------------
 
 echo
@@ -670,7 +696,7 @@ sed -i \
 
 
 # ------------------------------------------------------------
-# 16. Touchpad
+# 17. Touchpad
 # ------------------------------------------------------------
 
 echo
@@ -690,7 +716,7 @@ sudo install -Dm644 \
 
 
 # ------------------------------------------------------------
-# 17. Optional keyboard localization
+# 18. Optional keyboard localization
 # ------------------------------------------------------------
 
 echo
@@ -732,7 +758,7 @@ fi
 
 
 # ------------------------------------------------------------
-# 18. tty1 username pre-fill
+# 19. tty1 username pre-fill
 # ------------------------------------------------------------
 
 echo
@@ -754,7 +780,7 @@ sudo systemctl daemon-reload
 
 
 # ------------------------------------------------------------
-# 19. Remove temporary dotfiles
+# 20. Remove temporary dotfiles
 # ------------------------------------------------------------
 
 echo
@@ -766,7 +792,7 @@ trap - EXIT
 
 
 # ------------------------------------------------------------
-# 20. Finish
+# 21. Finish
 # ------------------------------------------------------------
 
 echo
@@ -785,6 +811,8 @@ echo "  - dwmblocks"
 echo "  - nsxiv"
 echo "  - nsxiv default image association"
 echo "  - dotfiles"
+echo "  - M3nt3X-TH3M3 GTK theme"
+echo "  - Indigo Reality icon theme"
 echo "  - Firefox configuration"
 echo "  - Thunderbird configuration"
 echo "  - default wallpaper"
@@ -815,7 +843,7 @@ echo "GTK settings are provided by the dotfiles repository."
 
 
 # ------------------------------------------------------------
-# 21. Delete installer
+# 22. Delete installer
 # ------------------------------------------------------------
 
 echo
@@ -825,7 +853,7 @@ rm -f -- "$SCRIPT_PATH"
 
 
 # ------------------------------------------------------------
-# 22. Reboot
+# 23. Reboot
 # ------------------------------------------------------------
 
 echo
