@@ -239,6 +239,7 @@ echo "==> Installing applications..."
 
 sudo apt-get install -y \
     brightnessctl \
+    dmz-cursor-theme \
     dunst \
     fastfetch \
     feh \
@@ -1008,6 +1009,7 @@ echo "  - nsxiv default image association"
 echo "  - dotfiles"
 echo "  - M3nt3X-TH3M3 GTK theme"
 echo "  - Indigo Reality icon theme"
+echo "  - Vanilla-DMZ cursor theme"
 echo "  - Firefox configuration"
 echo "  - Thunderbird configuration"
 echo "  - default wallpaper"
