@@ -235,7 +235,7 @@ On Debian, the policies are installed to:
 The default wallpaper is:
 
 ```text
-dante-et-vergil-dans-le-neuvieme-cercle-de-l'enfer.jpg
+aero-pharaoh.png
 ```
 
 It is installed to:
