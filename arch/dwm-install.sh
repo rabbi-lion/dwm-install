@@ -22,7 +22,7 @@ DOTFILES_REPO="https://github.com/rabbi-lion/dotfiles.git"
 GTK_THEME_REPO="https://github.com/edwinagudelojaramillo/retro-theme.git"
 ICON_THEME_REPO="https://www.opencode.net/deepspacewhine/indigo-reality.git"
 
-DEFAULT_WALLPAPER="aero-pharaoh.png"
+DEFAULT_WALLPAPER="space.jpg"
 
 
 # ------------------------------------------------------------
