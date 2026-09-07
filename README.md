@@ -235,7 +235,7 @@ On Debian, the policies are installed to:
 The default wallpaper is:
 
 ```text
-aero-pharaoh.png
+space.jpg
 ```
 
 It is installed to:
