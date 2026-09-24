@@ -1,22 +1,20 @@
 # dwm-install
 
-Post-install scripts for setting up my dwm environment on Arch Linux and Debian.
+Post-install scripts for my dwm environment on Arch Linux and Debian.
 
-The scripts install the required programs, build my custom source repositories, deploy my dotfiles and configure the desktop environment.
-
-The base operating system installation is intentionally kept separate.
+Installs programs, builds my source repositories, deploys dotfiles,
+and configures the desktop. The base OS installation is kept separate.
 
 ## Installation
 
-Run the installer as your normal user, **not as root**.
+Run as your normal user, **not as root**.
 
 ### Arch Linux
 
 ```sh
 sudo pacman -S --needed curl
-
-curl -fLo "$HOME/dwm-install.sh" https://raw.githubusercontent.com/rabbi-lion/dwm-install/master/arch/dwm-install.sh
-
+curl -fLo "$HOME/dwm-install.sh" \
+    https://raw.githubusercontent.com/rabbi-lion/dwm-install/master/arch/dwm-install.sh
 chmod +x "$HOME/dwm-install.sh"
 "$HOME/dwm-install.sh"
 ```
@@ -26,94 +24,70 @@ chmod +x "$HOME/dwm-install.sh"
 ```sh
 sudo apt-get update
 sudo apt-get install -y curl
-
-curl -fLo "$HOME/dwm-install.sh" https://raw.githubusercontent.com/rabbi-lion/dwm-install/master/debian/dwm-install.sh
-
+curl -fLo "$HOME/dwm-install.sh" \
+    https://raw.githubusercontent.com/rabbi-lion/dwm-install/master/debian/dwm-install.sh
 chmod +x "$HOME/dwm-install.sh"
 "$HOME/dwm-install.sh"
 ```
 
-To check the script before running it:
+Check syntax before running:
 
 ```sh
 bash -n "$HOME/dwm-install.sh" && echo "Syntax OK"
 ```
 
-To keep an installation log:
+Keep a log:
 
 ```sh
 "$HOME/dwm-install.sh" 2>&1 | tee "$HOME/dwm-install.log"
 ```
 
-The installer removes its downloaded copy after a successful installation.
+The installer removes its downloaded copy after a successful install.
 
-## Preparation
+## Requirements
 
-A working base installation of Arch Linux or Debian is required.
+A working base install of Arch or Debian, with:
 
-Before running the installer, the system should already have:
-
-- networking
-- a normal user account
-- `sudo` access
+- networking and an internet connection
+- a normal user account with `sudo`
 - a working bootloader
-- an internet connection
 
-Partitioning, filesystems, bootloader installation, user creation and other base-installation tasks are not handled by these scripts.
+Partitioning, filesystems, bootloader setup, and user creation are
+not handled by these scripts.
 
 ## What it installs
 
-The environment is based around:
+- dwm, st, dmenu, dwmblocks
+- nsxiv, Thunar, mpv, Neovim
+- Firefox, Thunderbird
+- PipeWire, WirePlumber
 
-- dwm
-- st
-- dmenu
-- dwmblocks
-- nsxiv
-- Thunar
-- mpv
-- Neovim
-- Firefox
-- Thunderbird
-- PipeWire
-- WirePlumber
-
-The exact package lists are kept in the installer scripts.
+Exact package lists live in the installer scripts.
 
 ## Source repositories
 
-My custom builds are installed from:
+Custom builds are installed from:
 
-```text
+```
 https://github.com/rabbi-lion/dwm
 https://github.com/rabbi-lion/st
 https://github.com/rabbi-lion/dwmblocks
 https://github.com/rabbi-lion/nsxiv
 ```
 
-`dmenu` is kept stock and built directly from suckless.
+`dmenu` is stock, built from suckless.
 
-Source repositories are installed under:
-
-```text
-~/src/
-```
-
-The dotfiles repository is cloned temporarily during installation:
-
-```text
-https://github.com/rabbi-lion/dotfiles
-```
+Sources are cloned under `~/src/`. Dotfiles are cloned temporarily
+from `https://github.com/rabbi-lion/dotfiles` during installation.
 
 ## dwm
 
-My dwm build includes:
+Includes:
 
 - vanity gaps
 - scratchpads
 - swallowing
 - sticky windows
-- desktop toggle
 - centered floating windows
 - stack rotation
 - clickable dwmblocks
@@ -121,9 +95,9 @@ My dwm build includes:
 
 ## st
 
-My st build includes scrollback, mouse scrolling and helper bindings for URLs and terminal output.
+Includes scrollback, mouse scrolling, and helper bindings:
 
-```text
+```
 Alt+l       open URL
 Alt+y       copy URL
 Alt+o       copy terminal output
@@ -133,65 +107,34 @@ Shift+PgDn  scroll down
 
 ## Status bar
 
-`dwmblocks` provides the status bar.
+`dwmblocks` provides the status bar. Default blocks:
 
-The default blocks are:
-
-```text
+```
 internet | brightness | volume | battery | clock
 ```
 
-Status scripts are installed under:
-
-```text
-~/.local/bin/statusbar/
-```
+Status scripts live in `~/.local/bin/statusbar/`.
 
 ## nsxiv
 
-`nsxiv` is used as the default image viewer.
+Default image viewer. Compiled from source
+(`https://github.com/rabbi-lion/nsxiv`), not installed from distro
+repositories.
 
-`nsxiv` itself is **compiled from source from my GitHub repository** by `dwm-install`; it is not installed from the Arch Linux or Debian repositories.
+Includes directory-aware image opening, Thunar integration, common
+image MIME associations, Trash support, and nsxiv key handling.
 
-Source:
-
-`https://github.com/rabbi-lion/nsxiv`
-
-The setup includes:
-
-- directory-aware image opening
-- Thunar integration
-- common image MIME associations
-- Trash support
-- nsxiv key handling
-
-The file-manager helper is:
-
-`~/.local/bin/nsxiv-rifle`
-
-Stock nsxiv scaling behavior is preserved.
+File-manager helper: `~/.local/bin/nsxiv-rifle`. Stock scaling is
+preserved.
 
 ## Desktop configuration
 
-The dotfiles configure, among other things:
+Dotfiles configure bash, dunst, Firefox, GTK, mpv, Neovim, nsxiv,
+Redshift, Thunderbird, Thunar, Xresources, yt-dlp, and Zathura.
 
-- bash
-- dunst
-- Firefox
-- GTK
-- mpv
-- Neovim
-- nsxiv
-- Redshift
-- Thunderbird
-- Thunar
-- Xresources
-- yt-dlp
-- Zathura
+The graphical session is started through `.xinitrc`, which launches:
 
-The graphical session is started through `.xinitrc` and launches:
-
-```text
+```
 Xresources
 Redshift
 wallpaper
@@ -204,68 +147,52 @@ Caps Lock and Escape are swapped for the X session.
 
 ## Audio
 
-Audio uses PipeWire and WirePlumber with PulseAudio and JACK compatibility.
-
-Audio device handling uses `wpctl`.
+PipeWire and WirePlumber, with PulseAudio and JACK compatibility.
+Device handling uses `wpctl`.
 
 ## Firefox and Thunderbird
 
-Firefox and Thunderbird receive system policies from the dotfiles repository.
+Both receive system policies from the dotfiles repo. The policies
+set `widget.use-xdg-desktop-portal.file-picker = 0` so both use
+native file pickers instead of the XDG portal picker.
 
-Both policies fix file-picker behavior for the X11/dwm environment by setting:
-
-`widget.use-xdg-desktop-portal.file-picker = 0`
-
-This makes Firefox and Thunderbird use their native file pickers instead of the XDG desktop portal file picker.
-
-Firefox configuration also includes privacy and interface preferences together with:
+Firefox also gets privacy and interface preferences, plus:
 
 - uBlock Origin
 - Dark Reader
 - Enhancer for YouTube
 - I Still Don't Care About Cookies
 
-On Debian, the policies are installed to:
+On Debian, policies install to:
 
 - Firefox: `/etc/firefox/policies/policies.json`
 - Thunderbird: `/usr/lib/thunderbird/distribution/policies.json`
 
 ## Wallpaper
 
-The default wallpaper is:
-
-```text
-space.jpg
-```
-
-It is installed to:
-
-```text
-~/Pictures/Wallpapers/
-```
+Default: `space.jpg`, installed to `~/Pictures/Wallpapers/`.
 
 ## Redshift and keyboard
 
-The installer asks for latitude and longitude for Redshift.
+The installer prompts for latitude and longitude. Default
+temperatures:
 
-Default temperatures are:
-
-```text
+```
 Day:   6500 K
 Night: 4500 K
 ```
 
-A US keyboard layout is assumed by default. Other console and X11 layouts can be selected during installation.
+US keyboard assumed by default; other console and X11 layouts can
+be selected during install.
 
 ## NVIDIA
 
-NVIDIA driver installation is optional.
-
-If NVIDIA hardware is detected, the installer offers to install the appropriate driver packages for the distribution.
+Optional. If NVIDIA hardware is detected, the installer offers to
+install the appropriate driver packages for the distro.
 
 ## Repository layout
 
-```text
+```
 dwm-install/
 ├── LICENSE
 ├── README.md
@@ -277,18 +204,13 @@ dwm-install/
 
 ## Notes
 
-The scripts are intended primarily for fresh or minimal systems.
-
-Existing matching configuration files may be overwritten.
-
-Machine-specific configuration and Polkit configuration are intentionally kept outside the public installer.
+Intended for fresh or minimal systems. Existing matching config
+files may be overwritten. Machine-specific and Polkit configuration
+are intentionally kept out of the public installer.
 
 ## License
 
-Made by rabbi-lion.
+Made by rabbi-lion. Licensed under the GNU GPL v3. See `LICENSE`.
 
-Licensed under the GNU General Public License version 3.
-
-See `LICENSE` for the full license text.
-
-Programs built or installed by these scripts retain their own respective licenses.
+Programs built or installed by these scripts retain their own
+licenses.
