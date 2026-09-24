@@ -846,9 +846,6 @@ echo
 echo "Static wallpaper startup is handled by:"
 echo "  ~/.local/bin/wallpaper"
 echo
-echo "The optional slideshow remains available as:"
-echo "  ~/.local/bin/wallpaper-slideshow"
-echo
 echo "The Caps Lock / Escape swap is handled by ~/.xinitrc."
 echo
 echo "GTK settings are provided by the dotfiles repository."
