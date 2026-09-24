@@ -1040,9 +1040,6 @@ echo
 echo "Static wallpaper helper:"
 echo "  ~/.local/bin/wallpaper"
 echo
-echo "Optional slideshow:"
-echo "  ~/.local/bin/wallpaper-slideshow"
-echo
 echo "Caps Lock / Escape swapping is handled by ~/.xinitrc."
 echo
 echo "GTK settings are provided by the dotfiles repository."
