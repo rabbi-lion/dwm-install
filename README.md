@@ -190,18 +190,6 @@ be selected during install.
 Optional. If NVIDIA hardware is detected, the installer offers to
 install the appropriate driver packages for the distro.
 
-## Repository layout
-
-```
-dwm-install/
-├── LICENSE
-├── README.md
-├── arch/
-│   └── dwm-install.sh
-└── debian/
-    └── dwm-install.sh
-```
-
 ## Notes
 
 Intended for fresh or minimal systems. Existing matching config
